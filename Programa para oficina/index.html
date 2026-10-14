@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Costa Rica | Consultas </title>
+  <style>
+    /* Evita selección de texto */
+    body {
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
+    }
+  </style>
+  <script>
+    // Bloquea clic derecho
+    document.addEventListener('contextmenu', function(e) {
+      e.preventDefault();
+      alert("Copia deshabilitada 🚫");
+    });
+
+    // Bloquea teclas comunes de copiar (Ctrl+U, Ctrl+C, Ctrl+Shift+I)
+    document.addEventListener('keydown', function(e) {
+      if ((e.ctrlKey && e.key === 'u') || 
+          (e.ctrlKey && e.key === 'c') || 
+          (e.ctrlKey && e.shiftKey && e.key === 'I')) {
+        e.preventDefault();
+        alert("Acción bloqueada 🚫");
+      }
+    });
+  </script>
+</head>
+<body>
+  <h2></h2>
+  <p></p>
+</body>
+</html>
+
+<img src="Program.jpeg" alt="">
+
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Programa para oficina </title>
+
+<style>
+
+body{
+    margin:0;
+    font-family:Arial,sans-serif;
+    background:#f1f3f6;
+}
+
+/* BARRA */
+.barra{
+    background:#2563eb;
+    padding:10px;
+    display:flex;
+    flex-wrap:wrap;
+    gap:10px;
+    align-items:center;
+    box-shadow:0 2px 10px rgba(0,0,0,0.2);
+    position:sticky;
+    top:0;
+    z-index:1000;
+}
+
+.barra button,
+.barra select,
+.barra input{
+    padding:8px 12px;
+    border:none;
+    border-radius:8px;
+    font-size:14px;
+    cursor:pointer;
+}
+
+.barra button:hover{
+    background:#dbeafe;
+}
+
+.titulo{
+    color:white;
+    font-size:20px;
+    font-weight:bold;
+    margin-right:20px;
+}
+
+/* EDITOR */
+.editor-container{
+    display:flex;
+    justify-content:center;
+    padding:30px;
+}
+
+.editor{
+    width:80%;
+    min-height:700px;
+    background:white;
+    padding:40px;
+    border-radius:15px;
+    box-shadow:0 4px 20px rgba(0,0,0,0.15);
+    outline:none;
+    font-size:18px;
+    line-height:1.6;
+    position:relative;
+}
+
+/* IMAGENES */
+.imagen-movible{
+    position:absolute;
+    width:300px;
+    border-radius:12px;
+    cursor:move;
+    user-select:none;
+    box-shadow:0 4px 15px rgba(0,0,0,0.2);
+}
+
+/* PANEL */
+.panel-imagen{
+    position:fixed;
+    bottom:20px;
+    right:20px;
+    background:white;
+    padding:15px;
+    border-radius:15px;
+    box-shadow:0 4px 20px rgba(0,0,0,0.2);
+    display:none;
+    gap:10px;
+    flex-wrap:wrap;
+    z-index:9999;
+}
+
+.panel-imagen button{
+    background:#2563eb;
+    color:white;
+    border:none;
+    padding:10px;
+    border-radius:10px;
+    cursor:pointer;
+}
+
+.panel-imagen button:hover{
+    background:#1d4ed8;
+}
+
+/* RESPONSIVE */
+@media(max-width:768px){
+
+    .editor{
+        width:95%;
+        padding:20px;
+    }
+
+}
+
+</style>
+</head>
+<body>
+
+<!-- BARRA -->
+<div class="barra">
+
+    <div class="titulo">Space</div>
+
+    <button onclick="format('bold')"><b>B</b></button>
+
+    <button onclick="format('italic')"><i>I</i></button>
+
+    <button onclick="format('underline')"><u>U</u></button>
+
+    <button onclick="format('justifyLeft')">⬅</button>
+
+    <button onclick="format('justifyCenter')">⬌</button>
+
+    <button onclick="format('justifyRight')">➡</button>
+
+    <!-- TAMAÑO TEXTO -->
+    <select onchange="format('fontSize', this.value)">
+        <option>Tamaño</option>
+        <option value="1">10</option>
+        <option value="2">14</option>
+        <option value="3">18</option>
+        <option value="4">24</option>
+        <option value="5">32</option>
+        <option value="6">40</option>
+    </select>
+
+    <!-- COLOR -->
+    <input type="color"
+    onchange="format('foreColor', this.value)">
+
+    <!-- SUBIR IMAGEN -->
+    <input type="file"
+    id="subirImagen"
+    accept="image/*">
+
+    <!-- BOTONES -->
+    <button onclick="guardarArchivo()">
+        💾 Guardar Archivo
+    </button>
+
+    <button onclick="cargarArchivo()">
+        📂 Abrir Archivo
+    </button>
+
+    <button onclick="imprimir()">
+        🖨 Imprimir
+    </button>
+
+</div>
+
+<!-- INPUT OCULTO -->
+<input type="file"
+id="abrirArchivo"
+accept=".html"
+style="display:none;">
+
+<!-- EDITOR -->
+<div class="editor-container">
+
+    <div class="editor"
+    id="editor"
+    contenteditable="true">
+
+        <h1>Bienvenido a Space</h1>
+
+        <p>
+            El contenido se puede guardar
+            y abrir desde tu computadora.
+        </p>
+
+    </div>
+
+</div>
+
+<!-- PANEL IMAGEN -->
+<div class="panel-imagen"
+id="panelImagen">
+
+    <button onclick="tamanoImagen('150px')">
+        📱 Pequeño
+    </button>
+
+    <button onclick="tamanoImagen('300px')">
+        🖼 Intermedio
+    </button>
+
+    <button onclick="tamanoImagen('500px')">
+        🖥 Grande
+    </button>
+
+    <button onclick="eliminarImagen()">
+        🗑 Eliminar
+    </button>
+
+</div>
+
+<script>
+
+/* FORMATO */
+function format(command, value = null){
+
+    document.execCommand(command,false,value);
+
+}
+
+/* IMPRIMIR */
+function imprimir(){
+
+    window.print();
+
+}
+
+/* GUARDAR EN LA COMPU */
+function guardarArchivo(){
+
+    const contenido =
+    document.getElementById('editor').innerHTML;
+
+    const htmlCompleto = `
+    <!DOCTYPE html>
+    <html lang="es">
+    <head>
+    <meta charset="UTF-8">
+    <title>Documento Guardado</title>
+    </head>
+    <body>
+    ${contenido}
+    </body>
+    </html>
+    `;
+
+    const blob =
+    new Blob([htmlCompleto],
+    {type:'text/html'});
+
+    const enlace =
+    document.createElement('a');
+
+    enlace.href =
+    URL.createObjectURL(blob);
+
+    enlace.download =
+    'MiDocumento.html';
+
+    enlace.click();
+
+}
+
+/* ABRIR ARCHIVO */
+function cargarArchivo(){
+
+    document
+    .getElementById('abrirArchivo')
+    .click();
+
+}
+
+/* LEER ARCHIVO */
+document
+.getElementById('abrirArchivo')
+.addEventListener('change',function(e){
+
+    const archivo = e.target.files[0];
+
+    if(!archivo) return;
+
+    const lector = new FileReader();
+
+    lector.onload = function(event){
+
+        const parser =
+        new DOMParser();
+
+        const doc =
+        parser.parseFromString(
+            event.target.result,
+            'text/html'
+        );
+
+        document
+        .getElementById('editor')
+        .innerHTML =
+        doc.body.innerHTML;
+
+        activarImagenes();
+
+    };
+
+    lector.readAsText(archivo);
+
+});
+
+/* IMAGEN ACTUAL */
+let imagenActual = null;
+
+/* SUBIR IMAGEN */
+document
+.getElementById('subirImagen')
+.addEventListener('change',function(e){
+
+    const archivo = e.target.files[0];
+
+    if(!archivo) return;
+
+    const lector = new FileReader();
+
+    lector.onload = function(event){
+
+        const img =
+        document.createElement('img');
+
+        img.src =
+        event.target.result;
+
+        img.classList.add(
+            'imagen-movible'
+        );
+
+        img.style.left = '50px';
+        img.style.top = '150px';
+
+        configurarImagen(img);
+
+        document
+        .getElementById('editor')
+        .appendChild(img);
+
+    };
+
+    lector.readAsDataURL(archivo);
+
+});
+
+/* CONFIGURAR IMAGEN */
+function configurarImagen(img){
+
+    img.onclick = function(ev){
+
+        ev.stopPropagation();
+
+        seleccionarImagen(img);
+
+    };
+
+    hacerMovible(img);
+
+}
+
+/* ACTIVAR IMAGENES */
+function activarImagenes(){
+
+    const imagenes =
+    document.querySelectorAll(
+        '.imagen-movible'
+    );
+
+    imagenes.forEach(img=>{
+
+        configurarImagen(img);
+
+    });
+
+}
+
+/* SELECCIONAR */
+function seleccionarImagen(img){
+
+    imagenActual = img;
+
+    document
+    .getElementById('panelImagen')
+    .style.display = 'flex';
+
+}
+
+/* TAMAÑO */
+function tamanoImagen(size){
+
+    if(imagenActual){
+
+        imagenActual.style.width = size;
+
+    }
+
+}
+
+/* ELIMINAR */
+function eliminarImagen(){
+
+    if(imagenActual){
+
+        imagenActual.remove();
+
+        document
+        .getElementById('panelImagen')
+        .style.display = 'none';
+
+    }
+
+}
+
+/* MOVER IMAGEN */
+function hacerMovible(elemento){
+
+    let offsetX = 0;
+    let offsetY = 0;
+    let moviendo = false;
+
+    elemento.addEventListener(
+    'mousedown', function(e){
+
+        moviendo = true;
+
+        offsetX =
+        e.clientX -
+        elemento.offsetLeft;
+
+        offsetY =
+        e.clientY -
+        elemento.offsetTop;
+
+    });
+
+    document.addEventListener(
+    'mousemove', function(e){
+
+        if(!moviendo) return;
+
+        elemento.style.left =
+        (e.clientX - offsetX)
+        + 'px';
+
+        elemento.style.top =
+        (e.clientY - offsetY)
+        + 'px';
+
+    });
+
+    document.addEventListener(
+    'mouseup', function(){
+
+        moviendo = false;
+
+    });
+
+}
+
+</script>
+
+</body>
+</html>
+
+
+
